@@ -54,7 +54,7 @@ class bookcontroller{
     }
 
     @DeleteMapping("/{id}")
-    fun deletebook(@PathVariable(name="id") id: Int):Any {
+    fun deleteBook(@PathVariable(name="id") id: Int):Any {
         try {
             return service.deletebook(id)
         }catch (e: Exception){

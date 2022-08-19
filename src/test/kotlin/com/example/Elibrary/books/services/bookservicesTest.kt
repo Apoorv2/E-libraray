@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 
@@ -71,7 +72,7 @@ internal class bookservicesTest{
     fun getListOfBooks() {
         val bookList:  List<Books> = listOf(Books(
             1,
-            "The Jungle Book",
+            "The jungle Book",
             323,
             "Rudyard Kipling",
             "2022-01-05",
@@ -83,6 +84,61 @@ internal class bookservicesTest{
         Assertions.assertEquals(listOfBooks,bookList)
         verify (exactly = 1){ bookRepository.getListOfBooks("The jungle Book") }
     }
+
+
+    @Test
+    fun getBookSimilarToo(){
+        val bookList:  Page<Books> = PageImpl(listOf(Books(
+            1,
+            "The jungle Book",
+            323,
+            "Rudyard Kipling",
+            "2022-01-05",
+            "fantasy",
+            null,
+        )))
+        val pageRequest: Pageable = PageRequest.of(0, 100)
+        every {bookRepository.findBookSimilarTo("The jungle Book",pageRequest)} returns bookList
+        val book =bookservices.getBookSimilarToo("The jungle Book",pageRequest)
+        Assertions.assertEquals(book,bookList)
+       verify (exactly =1){ bookRepository.findBookSimilarTo("The jungle Book",pageRequest) }
+    }
+
+    @Test
+    fun getBookByAuthor(){
+        val bookList:  Page<Books> = PageImpl(listOf(Books(
+            1,
+            "The jungle Book",
+            323,
+            "Rudyard Kipling",
+            "2022-01-05",
+            "fantasy",
+            null,
+        )))
+        val pageRequest: Pageable = PageRequest.of(0, 100)
+        every {bookRepository.findBookByAuthor("Rudyard kipling",pageRequest)} returns bookList
+        val book = bookservices.getBookByAuthor("Rudyard kipling",pageRequest)
+        Assertions.assertEquals(book,bookList)
+        verify (exactly =1){ bookRepository.findBookByAuthor("Rudyard kipling",pageRequest) }
+    }
+
+    @Test
+   fun getBookByCategory(){
+        val bookList:  Page<Books> = PageImpl(listOf(Books(
+            1,
+            "The jungle Book",
+            323,
+            "Rudyard Kipling",
+            "2022-01-05",
+            "fantasy",
+            null,
+        )))
+        val pageRequest: Pageable = PageRequest.of(0, 100)
+        every {bookRepository.findBookByCategory("fantasy",pageRequest)} returns bookList
+        val book = bookservices.getBookByCategory("fantasy",pageRequest)
+        Assertions.assertEquals(book,bookList)
+        verify (exactly =1){ bookRepository.findBookByCategory("fantasy",pageRequest) }
+   }
 
 }
 
